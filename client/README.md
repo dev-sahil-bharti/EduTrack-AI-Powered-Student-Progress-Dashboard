@@ -1,16 +1,80 @@
-# React + Vite
+# 🚀 EduTrack React Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to the frontend application for **EduTrack**! This is a modern, responsive, and highly interactive user dashboard built using Vite and React. It serves as the primary interface for students to track their goals, log study sessions, manage their profiles, and receive dynamic **Gemini-powered AI study insights**.
 
-Currently, two official plugins are available:
+## 💻 Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Framework:** React.js initialized via [Vite](https://vitejs.dev/) for blazing-fast development speeds.
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) for beautiful, responsive, and easily maintainable utility-first styling.
+- **Icons & Graphics:** [Lucide React](https://lucide.dev/) for crisp, scalable vectors.
+- **Animations:** [Framer Motion](https://www.framer.com/motion/) handling smooth UI transitions and layout shifts.
+- **Routing:** [React Router DOM](https://reactrouter.com/) operating protected inner dashboards and public auth gates.
+- **Data Visualization:** [Recharts](https://recharts.org/) rendering your dynamically tracked study targets.
+- **Interactions:** React Hot Toast for instant popup notifications.
 
-## React Compiler
+## 📁 Directory Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Our project is organized specifically to be highly readable so you can find exactly what you're looking for fast:
 
-## Expanding the ESLint configuration
+```text
+client/
+├── src/
+│   ├── api/          # Axios interceptors mapping directly to your backend
+│   ├── components/   # Reusable UI elements (Navbar, Collapsible Sidebar, Layout)
+│   ├── context/      # Global React Contexts (AuthContext tracks user state seamlessly)
+│   ├── pages/        # The core routes (Dashboard, Insights, Goals, Progress, etc)
+│   ├── services/     # Direct API bridges (ai.service, user.service, etc.)
+│   ├── App.jsx       # The main application router mounting component
+│   └── main.jsx      # The root React DOM rendering component
+├── index.html        # Vite's physical HTML root
+├── vite.config.js    # Bundler configurations (Localhost proxies, plugins)
+└── package.json      # Dependencies and execution scripts
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## ✨ Core Features
+
+* **Secure Authentication:** `jwt`-dependent route blocking handles `Login`/`Signup` cleanly preventing unverified access. 
+* **Dynamic Sidebar:** A global state-driven slideover menu designed to work brilliantly regardless of your device's screen size.
+* **Goal & Progress Tracking:** Track "Active Goals" and input hours into the **Progress Dashboard** to translate them directly into real-time charted stats.
+* **Smart AI Insights:** Integrating securely with **Google's Gemini 2.5 Flash**, the dashboard tracks your inputted data over seven rolling days to construct real-time, actionable study tips.
+
+---
+
+## 🛠️ Getting Started
+
+### 1. Prerequisites
+Ensure you have [Node.js](https://nodejs.org/) installed on your machine.
+
+### 2. Installations
+Open your terminal and navigate strictly into this `client` directory, then run:
+
+```bash
+npm install
+```
+
+*(This automatically reads your `package.json` file and downloads Tailwind, React, Lucide, Framer Motion, and everything else you need into your `node_modules` folder).*
+
+### 3. Environment Variables
+If your React frontend requires specific API URLs to connect to the Node.js backend:
+Create a `.env` file inside the `client` directory (on the same level as `package.json`):
+```text
+VITE_API_URL=http://localhost:5000/api
+```
+*(By default, standard requests map relatively via the proxy block configured within `vite.config.js`, meaning no heavy environment setting is strictly required locally if they share environments!)*
+
+### 4. Running the Dev Server
+Fire up your ultra-fast Vite server to see the magic happen:
+
+```bash
+npm run dev
+```
+Open **[http://localhost:5173](http://localhost:5173)** in your browser!
+
+---
+
+## ⚙️ Available Scripts
+
+In the project directory, you can run:
+- `npm run dev`: Runs the app in the development mode. The page will instantly reload when you make un-saved edits inside the code!
+- `npm run build`: Bundles the React application for production to the `dist` folder. It correctly bundles React in production mode and optimizes the build for the best performance.
+- `npm run preview`: Locally boot up a server running the compressed production `dist` map generated by `npm run build`. 
