@@ -21,7 +21,7 @@ const Dashboard = () => {
         setGoals(goalsData.data || goalsData);
         const progressData = await progressService.getWeeklyProgress();
         setWeeklyProgress(progressData.data || progressData);
-        
+
         const aiData = await aiService.getReports();
         const aiList = aiData.data || aiData;
         setReportsCount(aiList.length);
@@ -56,11 +56,11 @@ const Dashboard = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, idx) => (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            key={stat.name} 
+            key={stat.name}
             className="bg-slate-900 border border-slate-800 p-6 rounded-2xl hover:border-slate-700 transition-colors"
           >
             <div className="flex items-center gap-4">
@@ -83,7 +83,7 @@ const Dashboard = () => {
             <h2 className="text-xl font-bold text-white">Recent Goals</h2>
             <button className="text-blue-400 text-sm hover:text-blue-300">View All</button>
           </div>
-          
+
           <div className="space-y-4">
             {goals.length === 0 ? (
               <div className="text-center py-8 text-slate-500">

@@ -41,7 +41,7 @@ const Navbar = ({ toggleSidebar }) => {
           
           <button 
             onClick={logout}
-            className="ml-2 text-sm text-red-400 hover:text-red-300 transition-colors"
+            className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition duration-300"
           >
             Logout
           </button>
