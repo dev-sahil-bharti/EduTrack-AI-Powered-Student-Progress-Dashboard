@@ -60,8 +60,17 @@ export const AuthProvider = ({ children }) => {
     return res;
   };
 
+  const loginWithGoogle = async (credential) => {
+    const res = await authService.loginWithGoogle(credential);
+    const { token, ...user } = res.data;
+    setToken(token);
+    setUser(user);
+    localStorage.setItem('token', token);
+    return res;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout, updateUserProfile }}>
+    <AuthContext.Provider value={{ user, token, loading, login, loginWithGoogle, register, logout, updateUserProfile }}>
       {!loading && children}
     </AuthContext.Provider>
   );

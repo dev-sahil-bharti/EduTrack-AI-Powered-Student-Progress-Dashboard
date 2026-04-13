@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -8,16 +8,23 @@ const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
     setLoading(true);
     try {
-      await register({ name, email, password });
+      await register({ name, email, password, confirmPassword });
       toast.success('Account created successfully!');
       navigate('/');
     } catch (err) {
@@ -26,6 +33,39 @@ const Signup = () => {
       setLoading(false);
     }
   };
+
+
+  const handleCredentialSignup = async (response) => {
+    setLoading(true);
+    try {
+      await loginWithGoogle(response.credential);
+      toast.success('Successfully signed up with Google');
+      navigate('/');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to sign up with Google');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!window.google || window.googleInitializedSignup) return;
+
+    window.googleInitializedSignup = true;
+
+    google.accounts.id.initialize({
+      client_id: "109516426832-dl54n2gtmmunkm18850k4e6bdhpk2cbi.apps.googleusercontent.com",
+      callback: handleCredentialSignup,
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById("googleSigninDiv"),
+      {
+        theme: "outline",
+        size: "large",
+      }
+    );
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
@@ -80,6 +120,17 @@ const Signup = () => {
               placeholder="••••••••"
             />
           </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">Confirm Password</label>
+            <input
+              type="password"
+              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all placeholder:text-slate-500"
+              placeholder="••••••••"
+            />
+          </div>
 
           <button
             type="submit"
@@ -94,6 +145,10 @@ const Signup = () => {
             ) : "Sign Up"}
           </button>
         </form>
+
+        <div className="mt-8 flex justify-center">
+            <div id="googleSigninDiv" className="mb-2"></div>
+        </div>
 
         <p className="mt-8 text-center text-slate-400 text-sm">
           Already have an account?{' '}

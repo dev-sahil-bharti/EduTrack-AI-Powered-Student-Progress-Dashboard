@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
-import { motion } from 'framer-motion';
+import { complex, motion } from 'framer-motion';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
+
+  // ...
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,8 +28,47 @@ const Login = () => {
     }
   };
 
+  const handleCredentialLogin = async (response) => {
+    setLoading(true);
+    try {
+      await loginWithGoogle(response.credential);
+      toast.success('Successfully logged in with Google');
+      navigate('/');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to login with Google');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  useEffect(() => {
+    if (!window.google || window.googleInitialized) return;
+
+    window.googleInitialized = true;
+
+    google.accounts.id.initialize({
+      client_id: "109516426832-dl54n2gtmmunkm18850k4e6bdhpk2cbi.apps.googleusercontent.com",
+      callback: handleCredentialLogin,
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById("googleSigninDiv"),
+      {
+        theme: "outline",
+        size: "large",
+      }
+    );
+  }, []);
+
+
+
   return (
+
     <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
+
+
+
       {/* Background Orbs */}
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob"></div>
       <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-2000"></div>
@@ -82,6 +123,10 @@ const Login = () => {
           </button>
         </form>
 
+
+        <div className="mt-8 flex justify-center">
+            <div id="googleSigninDiv" className="mb-2"></div>
+        </div>
         <p className="mt-8 text-center text-slate-400 text-sm">
           Don't have an account?{' '}
           <Link to="/signup" className="text-blue-400 hover:text-blue-300 transition-colors font-medium">
