@@ -18,7 +18,9 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const goalsData = await goalService.getGoals();
-        setGoals(goalsData.data || goalsData);
+        const allGoals = goalsData.data || goalsData;
+        setGoals(allGoals);
+
         const progressData = await progressService.getWeeklyProgress();
         setWeeklyProgress(progressData.data || progressData);
 
@@ -37,10 +39,13 @@ const Dashboard = () => {
 
   const totalWeeklyMinutes = weeklyProgress?.goals?.reduce((sum, g) => sum + g.totalMinutes, 0) || 0;
   const studyHours = (totalWeeklyMinutes / 60).toFixed(1);
+
+  // Correctly use isCompleted field from backend
+  const activeGoals = goals.filter(g => !g.isCompleted);
   const tasksCompleted = goals.filter(g => g.isCompleted).length;
 
   const stats = [
-    { name: 'Active Goals', value: goals.filter(g => !g.isCompleted).length, icon: Target, color: 'text-blue-400', bg: 'bg-blue-400/10' },
+    { name: 'Active Goals', value: activeGoals.length, icon: Target, color: 'text-blue-400', bg: 'bg-blue-400/10' },
     { name: 'Study Hours (Week)', value: studyHours, icon: TrendingUp, color: 'text-purple-400', bg: 'bg-purple-400/10' },
     { name: 'Tasks Completed', value: tasksCompleted, icon: BookOpen, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
     { name: 'AI Insights', value: `${reportsCount} Total`, icon: Sparkles, color: 'text-amber-400', bg: 'bg-amber-400/10' },
@@ -77,27 +82,27 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Goals Section */}
+        {/* Recent Goals Section — only shows active, incomplete goals */}
         <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-white">Recent Goals</h2>
-            <button className="text-blue-400 text-sm hover:text-blue-300">View All</button>
+            <Link to="/goals" className="text-blue-400 text-sm hover:text-blue-300">View All</Link>
           </div>
 
           <div className="space-y-4">
-            {goals.length === 0 ? (
+            {activeGoals.length === 0 ? (
               <div className="text-center py-8 text-slate-500">
                 No active goals. Time to set some!
               </div>
             ) : (
-              goals.slice(0, 3).map((goal) => (
+              activeGoals.slice(0, 3).map((goal) => (
                 <div key={goal._id} className="flex items-center justify-between p-4 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-800 transition-colors">
                   <div>
                     <h3 className="text-white font-medium">{goal.subject}</h3>
                     <p className="text-slate-400 text-sm mt-1">{goal.weeklyTarget ? `${goal.weeklyTarget} mins / week` : 'No weekly target'}</p>
                   </div>
                   <div className="px-3 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                    {goal.status || 'In Progress'}
+                    In Progress
                   </div>
                 </div>
               ))
