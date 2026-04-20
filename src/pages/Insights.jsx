@@ -3,6 +3,7 @@ import { aiService } from '../services/ai.service';
 import { Sparkles, BrainCircuit, RefreshCw } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
 
 const Insights = () => {
   const [reports, setReports] = useState([]);
@@ -48,7 +49,7 @@ const Insights = () => {
           </h1>
           <p className="text-slate-400 mt-1">Personalized analyses based on your study habits.</p>
         </div>
-        <button 
+        <button
           onClick={handleGenerate}
           disabled={generating}
           className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2.5 rounded-xl transition-all font-medium hover:shadow-lg hover:shadow-purple-500/25 disabled:opacity-50"
@@ -72,7 +73,7 @@ const Insights = () => {
       ) : (
         <div className="grid gap-6">
           {reports.map((report, idx) => (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
@@ -80,20 +81,31 @@ const Insights = () => {
               className="bg-slate-900 border border-slate-800 p-6 md:p-8 rounded-3xl relative overflow-hidden"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-bl-full"></div>
-              
+
               <div className="flex items-center gap-3 mb-6">
                 <div className="px-3 py-1 bg-purple-500/10 text-purple-400 text-sm font-bold tracking-wider uppercase rounded-full border border-purple-500/20">
                   Weekly Summary
                 </div>
                 <span className="text-slate-500 text-sm">
-                  {new Date(report.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}
+                  {new Date(report.createdAt || Date.now()).toLocaleDateString('en-US', {
+                    month: 'short', day: 'numeric', year: 'numeric'
+                  })}
                 </span>
               </div>
-              
-              <div className="prose prose-invert max-w-none">
-                <p className="text-slate-300 leading-relaxed text-lg whitespace-pre-wrap">
-                  {report.aiSummary || "You had a productive week. Keep focusing on core concepts and consider taking more frequent short breaks."}
-                </p>
+
+              {/* ✅ Markdown rendered properly */}
+              <div className="prose prose-invert prose-slate max-w-none
+                  prose-headings:text-white prose-headings:font-semibold
+                  prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
+                  prose-headings:mt-6 prose-headings:mb-2
+                  prose-p:text-slate-300 prose-p:leading-relaxed prose-p:mb-4
+                  prose-strong:text-white prose-strong:font-semibold
+                  prose-ul:text-slate-300 prose-ol:text-slate-300
+                  prose-ul:mt-2 prose-ul:mb-4 prose-ol:mt-2 prose-ol:mb-4
+                  prose-li:marker:text-purple-400 prose-li:mb-1
+                  prose-blockquote:border-purple-500 prose-blockquote:text-slate-400
+                ">
+                <ReactMarkdown>{report.aiSummary}</ReactMarkdown>
               </div>
             </motion.div>
           ))}

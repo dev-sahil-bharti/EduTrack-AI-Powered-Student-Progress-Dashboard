@@ -6,6 +6,7 @@ import { aiService } from '../services/ai.service';
 import { Link } from 'react-router-dom';
 import { Target, TrendingUp, Sparkles, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
+import AIReportModal from '../components/AIReportModal';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -13,6 +14,7 @@ const Dashboard = () => {
   const [weeklyProgress, setWeeklyProgress] = useState(null);
   const [latestReport, setLatestReport] = useState(null);
   const [reportsCount, setReportsCount] = useState(0);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -122,9 +124,20 @@ const Dashboard = () => {
           <p className="text-slate-300 leading-relaxed text-sm line-clamp-4">
             {latestReport ? latestReport.aiSummary : "No AI report available yet. Log some progress to generate your first AI report!"}
           </p>
-          <Link to="/insights" className="mt-6 flex justify-center w-full py-2.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-white text-sm font-medium transition-colors backdrop-blur-md">
-            View Full Reports
-          </Link>
+          <button
+            onClick={() => latestReport && setShowModal(true)}
+            className="mt-6 flex justify-center w-full py-2.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-white text-sm font-medium transition-colors backdrop-blur-md disabled:opacity-40"
+            disabled={!latestReport}
+          >
+            View Full Report
+          </button>
+
+          {showModal && (
+            <AIReportModal
+              report={latestReport}
+              onClose={() => setShowModal(false)}
+            />
+          )}
         </div>
       </div>
     </div>
