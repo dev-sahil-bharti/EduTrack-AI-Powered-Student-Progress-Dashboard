@@ -80,8 +80,8 @@ const Login = () => {
         className="w-full max-w-md bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-2xl shadow-2xl relative z-10"
       >
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">Welcome Back</h1>
-          <p className="text-slate-400">Sign in to your EduTrack account</p>
+          <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">AI-Powered Edu-Track</h1>
+          <p className="text-slate-400">Login in to your EduTrack account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
