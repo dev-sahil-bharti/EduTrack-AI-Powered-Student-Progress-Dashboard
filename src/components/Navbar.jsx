@@ -34,7 +34,7 @@ const Navbar = ({ toggleSidebar }) => {
               <p className="text-sm font-medium text-white">{user?.name || 'Student'}</p>
               <p className="text-xs text-slate-400">{user?.role || 'Learner'}</p>
             </div>
-            <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-lg">
+            <div className="h-10 w-10 rounded-full bg-linear-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-lg">
               {user?.name?.[0]?.toUpperCase() || <User size={20}/>}
             </div>
           </Link>
