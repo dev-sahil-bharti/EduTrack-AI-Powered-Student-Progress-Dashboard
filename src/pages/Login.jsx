@@ -48,7 +48,7 @@ const Login = () => {
     window.googleInitialized = true;
 
     google.accounts.id.initialize({
-      client_id: "109516426832-dl54n2gtmmunkm18850k4e6bdhpk2cbi.apps.googleusercontent.com",
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
       callback: handleCredentialLogin,
     });
 
