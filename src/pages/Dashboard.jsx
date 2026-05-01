@@ -120,9 +120,41 @@ const Dashboard = () => {
   }, [weeklyProgress]);
 
   const totalWeeklyMinutes = weeklyProgress?.goals?.reduce((sum, g) => sum + g.totalMinutes, 0) || 0;
+  const totalWeeklyTarget = weeklyProgress?.goals?.reduce((sum, g) => sum + (g.weeklyTarget || 0), 0) || 0;
+  const weeklyPercentage = totalWeeklyTarget > 0 ? Math.round((totalWeeklyMinutes / totalWeeklyTarget) * 100) : 0;
+  
   const studyHours = (totalWeeklyMinutes / 60).toFixed(1);
   const activeGoals = goals.filter(g => !g.isCompleted);
   const tasksCompleted = goals.filter(g => g.isCompleted).length;
+
+  // Calculate best session and streak
+  const bestSession = useMemo(() => {
+    if (!allProgress.length) return 0;
+    return Math.max(...allProgress.map(p => p.completedMinutes || 0));
+  }, [allProgress]);
+
+  const streak = useMemo(() => {
+    if (!allProgress.length) return 0;
+    const dates = [...new Set(allProgress.map(p => format(new Date(p.date || p.createdAt), 'yyyy-MM-dd')))].sort().reverse();
+    let currentStreak = 0;
+    let today = format(new Date(), 'yyyy-MM-dd');
+    let yesterday = format(subDays(new Date(), 1), 'yyyy-MM-dd');
+    
+    if (dates[0] === today || dates[0] === yesterday) {
+      currentStreak = 1;
+      for (let i = 0; i < dates.length - 1; i++) {
+        const d1 = new Date(dates[i]);
+        const d2 = new Date(dates[i+1]);
+        const diff = (d1 - d2) / (1000 * 60 * 60 * 24);
+        if (diff === 1) {
+          currentStreak++;
+        } else {
+          break;
+        }
+      }
+    }
+    return currentStreak;
+  }, [allProgress]);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -135,7 +167,7 @@ const Dashboard = () => {
     { name: 'Active Goals', value: activeGoals.length, icon: Target, color: 'text-sky-400', bg: 'bg-sky-400/10', border: 'border-sky-400/20' },
     { name: 'Hours Studied', value: studyHours, icon: Clock, color: 'text-indigo-400', bg: 'bg-indigo-400/10', border: 'border-indigo-400/20' },
     { name: 'Done This Week', value: tasksCompleted, icon: CheckCircle2, color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-400/20' },
-    { name: 'Current Streak', value: '5 Days', icon: Flame, color: 'text-orange-400', bg: 'bg-orange-400/10', border: 'border-orange-400/20' },
+    { name: 'Current Streak', value: `${streak} Days`, icon: Flame, color: 'text-orange-400', bg: 'bg-orange-400/10', border: 'border-orange-400/20' },
   ];
 
   if (isLoading) {
@@ -263,9 +295,9 @@ const Dashboard = () => {
           <div className="w-full md:w-56 shrink-0 flex flex-col justify-center gap-6 border-l border-slate-800/50 md:pl-8">
             <div>
               <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-1">Weekly Target</p>
-              <h3 className="text-3xl font-black text-white">72%</h3>
+              <h3 className="text-3xl font-black text-white">{weeklyPercentage}%</h3>
               <div className="w-full h-1.5 bg-slate-800 rounded-full mt-2 overflow-hidden">
-                <div className="w-[72%] h-full bg-linear-to-r from-indigo-500 to-purple-500 rounded-full"></div>
+                <div className="h-full bg-linear-to-r from-indigo-500 to-purple-500 rounded-full" style={{ width: `${Math.min(weeklyPercentage, 100)}%` }}></div>
               </div>
             </div>
             <div className="space-y-4">
@@ -284,7 +316,7 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <p className="text-xs text-slate-400">Best Session</p>
-                  <p className="font-bold text-white">120m</p>
+                  <p className="font-bold text-white">{bestSession}m</p>
                 </div>
               </div>
             </div>

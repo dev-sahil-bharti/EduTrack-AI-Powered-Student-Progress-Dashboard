@@ -11,6 +11,11 @@ export const progressService = {
     return response.data;
   },
 
+  getAllProgress: async () => {
+    const response = await api.get('/progress/all');
+    return response.data;
+  },
+
   getProgressByGoal: async (goalId) => {
     const response = await api.get(`/progress/${goalId}`);
     return response.data;
