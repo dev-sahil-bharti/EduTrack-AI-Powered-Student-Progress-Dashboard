@@ -1,4 +1,7 @@
 <div align="center">
+  <a href="https://edutrack-ai-powered-frontend.onrender.com" target="_blank">
+  <img src="https://img.shields.io/badge/🚀_Live_Demo-EduTrack-blue?style=for-the-badge" />
+  </a>
   <img src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react" alt="React 19" />
   <img src="https://img.shields.io/badge/Vite-8-purple?style=for-the-badge&logo=vite" alt="Vite" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwind-css" alt="Tailwind CSS" />
